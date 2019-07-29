@@ -41,7 +41,7 @@ class PlayScreen extends Component {
 				      ref={swiper => {
 				        this.swiper = swiper
 				      }}
-				      verticalSwipe="false"
+				      style={style.stack}
 				    >
 
 				      <Card style={[style.card]}>
@@ -69,8 +69,9 @@ const style = StyleSheet.create({
   	left: 0
   },
   bubble: {
-  	left: 43,
-  	top: '25%'
+  	position: 'absolute',
+  	left: 8,
+  	top: 25
   },
   content:{
   	flexDirection: 'row',
@@ -94,8 +95,18 @@ const style = StyleSheet.create({
     shadowOpacity:0.5,
   },
   gif: {
-  	right: 17,
+  	right: -110,
   	top: '25%'
+  },
+  stack: {
+  	alignItems: 'center',
+  	justifyContent: 'center',
+  	flex: 1,
+  	flexDirection: 'row',
+  	top: 390,
+  	right: 0,
+  	left: 0,
+  	bottom: 0
   }
 });
 
