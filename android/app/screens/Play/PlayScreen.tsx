@@ -11,21 +11,35 @@ import CardStack, { Card } from 'react-native-card-stack-swiper';
 
 class PlayScreen extends Component {
   /*
-    Odd ingredients are odd, even ingredients are correct
+    Even ingredients are odd, Odd ingredients are correct
     current is for current ingredients in the cards
     index is counter for ingredients
     threshold is the one for leveling up
     counter is for threshold
+      
+    
   */
 
   state = {
     score: 0,
     ingredients: [
-      "toe of frog", "garlic cloves",
-      "foot of bear", "hawk's heart",
-      "tongue of dog", "newt eyeball"
+       "toe of frog",  
+       "garlic cloves", 
+       "foot of bear", 
+       "foot of bear", 
+       "tongue of dog", 
+       "newt eyeball" 
     ],
-    current: [],
+    type: [
+      "wrong",
+      "correct",
+      "wrong",
+      "correct",
+      "wrong",
+      "correct"
+    ],
+    currentIngredient: ["garlic cloves"],
+    currentType: ["correct"],
     start: false,
     visible: false,
     timer: 4,
@@ -36,6 +50,22 @@ class PlayScreen extends Component {
     reaction: "normal"    
   };
 
+  generateCard() {
+    let randomNumber = Math.floor(Math.random() * (this.state.index*2)-1);
+    let newArray = this.state.currentIngredient.push(...["toe of frog"]);
+    let tempArray = this.state.currentType.push(...["wrong"]);
+    this.setState(prevState => {
+      currentIngredient: newArray
+    });
+    this.setState(prevState => {
+      currentType: tempArray
+    });
+  }
+
+  componentDidMount() {
+    this.generateCard();
+    this.generateCard();
+  }
 
   gameStart() {
     if(this.state.start === true) {
@@ -58,7 +88,8 @@ class PlayScreen extends Component {
   start() {
     this.setState({
       score: 0,
-      current: [],
+      currentIngredient: [],
+      currentType: [],
       start: false,
       visible: false,
       timer: 4,
@@ -83,6 +114,8 @@ class PlayScreen extends Component {
       this.gameOver();
     }
     this.returnToNormal();
+    this.generateCard();
+    
   }
 
   correct() {
@@ -94,6 +127,7 @@ class PlayScreen extends Component {
               reaction: "correct",
               timer: 4 });
     this.returnToNormal();
+    this.generateCard();
   }
 
 
@@ -166,19 +200,27 @@ class PlayScreen extends Component {
               }}
               style={style.stack}
             >
-
-              <Card style={[style.card]} onSwipedLeft={() => this.correct()}>
-                <Image
-            source={require("../../../../assets/pictures/card.png")}
-             />
-
-              </Card>
+            {
+              this.state.currentIngredient.map( (item, key) => (
+                  <Card
+                  key={key} 
+                  style={[style.card]}
+                  onSwipedLeft={() => ((this.state.currentType[key]==="wrong") ? this.correct() : this.wrong())}
+                  onSwipedRight={() => ((this.state.currentType[key]==="wrong") ? this.wrong() : this.correct())}             
+                  >
+                      <Text>{item}</Text>
+                  </Card>
+                  
+                )
+              )
+            }
 
             </CardStack>
           </View>
           
           <Overlay visible={this.state.visible}>
             <Text>Game Over</Text>
+            
           </Overlay>        
         
       </View>
