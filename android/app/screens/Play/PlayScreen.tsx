@@ -1,255 +1,255 @@
 import styles from './styles';
 import React, { Component }  from 'react';
 import { StyleSheet,
-    Text,
-    View,
-    TouchableOpacity,
-    Image } from 'react-native';
+	  Text,
+	  View,
+	  TouchableOpacity,
+	  Image } from 'react-native';
 import ReactTimeout from 'react-timeout';
 import Overlay from 'react-native-modal-overlay';
 import CardStack, { Card } from 'react-native-card-stack-swiper';
 
 class PlayScreen extends Component {
-  /*
-    Even ingredients are odd, Odd ingredients are correct
-    current is for current ingredients in the cards
-    index is counter for ingredients
-    threshold is the one for leveling up
-    counter is for threshold
-      
-    
-  */
+	/*
+		Even ingredients are odd, Odd ingredients are correct
+		current is for current ingredients in the cards
+		index is counter for ingredients
+		threshold is the one for leveling up
+		counter is for threshold
+			
+		
+	*/
 
-  state = {
-    score: 0,
-    ingredients: [
-       "toe of frog",  
-       "garlic cloves", 
-       "foot of bear", 
-       "foot of bear", 
-       "tongue of dog", 
-       "newt eyeball" 
-    ],
-    type: [
-      "wrong",
-      "correct",
-      "wrong",
-      "correct",
-      "wrong",
-      "correct"
-    ],
-    currentIngredient: ["garlic cloves"],
-    currentType: ["correct"],
-    start: false,
-    visible: false,
-    timer: 4,
-    lives: 3,
-    index: 1,
-    counter: 0, 
-    threshold: 10,
-    reaction: "normal"    
-  };
+	state = {
+		score: 0,
+		ingredients: [
+			 "toe of frog",  
+			 "garlic cloves", 
+			 "foot of bear", 
+			 "foot of bear", 
+			 "tongue of dog", 
+			 "newt eyeball" 
+		],
+		type: [
+			"wrong",
+			"correct",
+			"wrong",
+			"correct",
+			"wrong",
+			"correct"
+		],
+		currentIngredient: ["garlic cloves"],
+		currentType: ["correct"],
+		start: false,
+		visible: false,
+		timer: 4,
+		lives: 3,
+		index: 1,
+		counter: 0, 
+		threshold: 10,
+		reaction: "normal"		
+	};
 
-  generateCard() {
-    let randomNumber = Math.floor(Math.random() * (this.state.index*2)-1);
-    let newArray = this.state.currentIngredient.push(...["toe of frog"]);
-    let tempArray = this.state.currentType.push(...["wrong"]);
-    this.setState(prevState => {
-      currentIngredient: newArray
-    });
-    this.setState(prevState => {
-      currentType: tempArray
-    });
-  }
+	generateCard() {
+		let randomNumber = Math.floor(Math.random() * (this.state.index*2)-1);
+		let newArray = this.state.currentIngredient.push(...["toe of frog"]);
+		let tempArray = this.state.currentType.push(...["wrong"]);
+		this.setState(prevState => {
+			currentIngredient: newArray
+		});
+		this.setState(prevState => {
+			currentType: tempArray
+		});
+	}
 
-  componentDidMount() {
-    this.generateCard();
-    this.generateCard();
-  }
+	componentDidMount() {
+		this.generateCard();
+		this.generateCard();
+	}
 
-  gameStart() {
-    if(this.state.start === true) {
-      this.clock = setTimeout(() => {this.setState( {timer: this.state.timer - 1 }), this.gameStart()}, 1000);
-    }
-    if(this.state.timer === 0) {
-      this.wrong();
-    }
-  }
+	gameStart() {
+		if(this.state.start === true) {
+			this.clock = setTimeout(() => {this.setState( {timer: this.state.timer - 1 }), this.gameStart()}, 1000);
+		}
+		if(this.state.timer === 0) {
+			this.wrong();
+		}
+	}
 
-  returnToNormal = () => setTimeout(() => this.setState({reaction: "normal"}), 2000);
+	returnToNormal = () => setTimeout(() => this.setState({reaction: "normal"}), 2000);
 
-  gameOver() {
-    this.setState({ start: false,
-            visible: true });
-  }
-
-
-
-  start() {
-    this.setState({
-      score: 0,
-      currentIngredient: [],
-      currentType: [],
-      start: false,
-      visible: false,
-      timer: 4,
-      lives: 3,
-      index: 1,
-      counter: 0, 
-      threshold: 10,
-      reaction: "normal"    
-    });
-  }
-
-  wrong() {
-    if(this.state.start === false) {
-      this.setState({ start: true });
-      this.gameStart();
-    }
-    this.setState({ reaction: "wrong",
-            lives: this.state.lives - 1,
-            timer: 4 });
-    
-    if(this.state.lives === 0) {
-      this.gameOver();
-    }
-    this.returnToNormal();
-    this.generateCard();
-    
-  }
-
-  correct() {
-    if(this.state.start === false) {
-      this.setState({ start: true });
-      this.gameStart();
-    }
-    this.setState({score: this.state.score + 1, 
-              reaction: "correct",
-              timer: 4 });
-    this.returnToNormal();
-    this.generateCard();
-  }
+	gameOver() {
+		this.setState({ start: false,
+						visible: true });
+	}
 
 
 
-  render() {
-    return(
-      <View >
+	start() {
+		this.setState({
+			score: 0,
+			currentIngredient: [],
+			currentType: [],
+			start: false,
+			visible: false,
+			timer: 4,
+			lives: 3,
+			index: 1,
+			counter: 0, 
+			threshold: 10,
+			reaction: "normal"		
+		});
+	}
 
-        <View>
-          <Image
-            source={require("../../../../assets/pictures/bg.jpg")}
-            style={style.bg}
-           />
-        </View>
-        
-        <View style={[style.content, {flex: 1, bottom: 0}]}>
-          <Image
-            source={require("../../../../assets/pictures/bubble.png")}
-            style={style.bubble}
-           />
-           {/* so increasing in score will not affect the flex, 
-              contain it */}
-           <View style={style.content}>
-            <View style={style.content}>
-              <Text style={style.score}>{this.state.score}</Text>
-            </View>
-            <Text style={style.text}>SCORE</Text>
-           </View>
-          {/*
-            BG image for transition purposes
-          */}
-           <Image
-            source={require("../../../../assets/pictures/gif.png")}
-            style={[{position: 'absolute', right: -17, top: 3}]}
-           />
-           {  
-            /*
-              Changing gifs if the user gets it right or wrong
-            */
-            this.state.reaction==="normal"? 
-            <Image
-              source={require("../../../../assets/pictures/normal.gif")}
-              style={style.gif}
-            />
-            :
-            this.state.reaction==="correct"?
-            <Image
-              source={require("../../../../assets/pictures/correct.gif")}
-              style={style.gif}
-            />
-            :
-            <Image
-              source={require("../../../../assets/pictures/wrong.gif")}
-              style={style.gif}
-             />
-           }
-          
-          
-        </View>
-        
-        <View style={[style.content, 
-            {flex: 1, 
-            top: 0,
-              bottom: 0,
-              right: 0,
-              left: 0}]}>
-          <CardStack
-              ref={swiper => {
-                this.swiper = swiper
-              }}
-              style={style.stack}
-            >
-            {
-              this.state.currentIngredient.map( (item, key) => (
-                  <Card
-                  key={key} 
-                  style={[style.card]}
-                  onSwipedLeft={() => ((this.state.currentType[key]==="wrong") ? this.correct() : this.wrong())}
-                  onSwipedRight={() => ((this.state.currentType[key]==="wrong") ? this.wrong() : this.correct())}             
-                  >
-                      <Text>{item}</Text>
-                  </Card>
-                  
-                )
-              )
-            }
+	wrong() {
+		if(this.state.start === false) {
+			this.setState({ start: true });
+			this.gameStart();
+		}
+		this.setState({ reaction: "wrong",
+						lives: this.state.lives - 1,
+						timer: 4 });
+		
+		if(this.state.lives === 0) {
+			this.gameOver();
+		}
+		this.returnToNormal();
+		this.generateCard();
+		
+	}
 
-            </CardStack>
-          </View>
-          
-          <Overlay visible={this.state.visible}>
-            <Text>Game Over</Text>
-            
-          </Overlay>        
-        
-      </View>
-    );
-  }
+	correct() {
+		if(this.state.start === false) {
+			this.setState({ start: true });
+			this.gameStart();
+		}
+		this.setState({score: this.state.score + 1, 
+				      reaction: "correct",
+				  		timer: 4 });
+		this.returnToNormal();
+		this.generateCard();
+	}
+
+
+
+	render() {
+		return(
+			<View >
+
+				<View>
+					<Image
+						source={require("../../../../assets/pictures/bg.jpg")}
+						style={style.bg}
+					 />
+				</View>
+				
+				<View style={[style.content, {flex: 1, bottom: 0}]}>
+					<Image
+						source={require("../../../../assets/pictures/bubble.png")}
+						style={style.bubble}
+					 />
+					 {/* so increasing in score will not affect the flex, 
+					 		contain it */}
+					 <View style={style.content}>
+					 	<View style={style.content}>
+					 		<Text style={style.score}>{this.state.score}</Text>
+					 	</View>
+					 	<Text style={style.text}>SCORE</Text>
+					 </View>
+					{/*
+						BG image for transition purposes
+					*/}
+					 <Image
+					 	source={require("../../../../assets/pictures/gif.png")}
+					 	style={[{position: 'absolute', right: -17, top: 3}]}
+					 />
+					 {	
+					 	/*
+							Changing gifs if the user gets it right or wrong
+					 	*/
+					 	this.state.reaction==="normal"? 
+					 	<Image
+							source={require("../../../../assets/pictures/normal.gif")}
+							style={style.gif}
+					 	/>
+					 	:
+					 	this.state.reaction==="correct"?
+					 	<Image
+							source={require("../../../../assets/pictures/correct.gif")}
+							style={style.gif}
+						/>
+						:
+						<Image
+							source={require("../../../../assets/pictures/wrong.gif")}
+							style={style.gif}
+						 />
+					 }
+					
+					
+				</View>
+				
+				<View style={[style.content, 
+						{flex: 1, 
+						top: 0,
+					  	bottom: 0,
+					  	right: 0,
+					  	left: 0}]}>
+					<CardStack
+				      ref={swiper => {
+				        this.swiper = swiper
+				      }}
+				      style={style.stack}
+				    >
+				    {
+				    	this.state.currentIngredient.map( (item, key) => (
+				    			<Card
+				    			key={key} 
+				    			style={[style.card]}
+				    			onSwipedLeft={() => ((this.state.currentType[key]==="wrong") ? this.correct() : this.wrong())}
+				    			onSwipedRight={() => ((this.state.currentType[key]==="wrong") ? this.wrong() : this.correct())}			    		
+				    			>
+						      		<Text>{item}</Text>
+						     	</Card>
+				    			
+				    		)
+				    	)
+				    }
+
+				    </CardStack>
+			    </View>
+			    
+					<Overlay visible={this.state.visible}>
+						<Text>Game Over</Text>
+						
+					</Overlay>		    
+				
+			</View>
+		);
+	}
 }
 
 const style = StyleSheet.create({
   bg: {
-    position: 'absolute',
-    width: '100%'
+  	position: 'absolute',
+  	width: '100%'
   },
   bubble: {
-    position: 'absolute',
-    left: 8,
-    top: 25
+  	position: 'absolute',
+  	left: 8,
+  	top: 25
   },
   content:{
-    flexDirection: 'row',
-    width: '100%' ,
+  	flexDirection: 'row',
+  	width: '100%' ,
     alignItems: 'center',
     justifyContent: 'center',
   },
   card:{
-    top: 0,
-    bottom: 0,
-    right: 50,
-    left: 0,
-    resizeMode: 'contain',
+  	top: 0,
+  	bottom: 0,
+  	right: 50,
+  	left: 0,
+  	resizeMode: 'contain',
     justifyContent: "center",
     resizeMode: "contain",
     shadowColor: 'rgba(0,0,0,0.5)',
@@ -260,31 +260,31 @@ const style = StyleSheet.create({
     shadowOpacity:0.5,
   },
   gif: {
-    flex: 0,
-    right: 70,
-    top: '25%'
+  	flex: 0,
+  	right: 70,
+  	top: '25%'
   },
   score: {
-    fontFamily: 'Perfect',
-    fontSize: 20,
-    top: '23%',
-    left: 90
+  	fontFamily: 'Perfect',
+  	fontSize: 20,
+  	top: '23%',
+  	left: 90
   },
   stack: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    flexDirection: 'row',
-    top: 390,
-    right: 0,
-    left: 0,
-    bottom: 0
+  	alignItems: 'center',
+  	justifyContent: 'center',
+  	flex: 1,
+  	flexDirection: 'row',
+  	top: 390,
+  	right: 0,
+  	left: 0,
+  	bottom: 0
   },
   text: {
-    flex: 0,
-    fontFamily: 'pixelpoiiz',
-    top: '23%',
-    left: -200
+  	flex: 0,
+  	fontFamily: 'pixelpoiiz',
+  	top: '23%',
+  	left: -200
 
   }
 });

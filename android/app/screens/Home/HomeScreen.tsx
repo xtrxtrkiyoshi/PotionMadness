@@ -1,7 +1,10 @@
 import styles from './styles';
 import React, { Component }  from 'react';
-import { Text,
+import { StyleSheet, 
+		TouchableOpacity, 
+		Text,
 		View,
+		Image,
 		Button } from 'react-native';
 import AboutScreen from '../About';
 import HowScreen from '../How';
@@ -15,15 +18,24 @@ class HomeScreen extends Component {
 	render() {
 		return(
 			<View style={styles.container}>
-				<Button 
-				title="Play"
-				onPress={() => this.props.navigation.navigate('Play')}/>
-				<Button 
-				title="How to Play"
-				onPress={() => this.props.navigation.navigate('How')}/>
-				<Button 
-				title="About"
-				onPress={() => this.props.navigation.navigate('About')}/>
+				<TouchableOpacity onPress={() => this.props.navigation.navigate('Play')}>
+					<Image 
+					source={require('../../../../assets/pictures/bubble.png')}
+					style={style.button}
+					/>
+				</TouchableOpacity>
+				<TouchableOpacity onPress={() => this.props.navigation.navigate('How')}>
+					<Image 
+					source={require('../../../../assets/pictures/bubble.png')}
+					style={style.button}
+					/>
+				</TouchableOpacity>
+				<TouchableOpacity onPress={() => this.props.navigation.navigate('About')}>
+					<Image 
+					source={require('../../../../assets/pictures/bubble.png')}
+					style={style.button}
+					/>
+				</TouchableOpacity>
 			</View>
 		);
 	}
@@ -53,6 +65,12 @@ const HomeStack = createStackNavigator({
  				});
 
  const AppContainer =  createAppContainer(HomeStack);
+
+const style = StyleSheet.create({
+	button: {
+		marginBottom: 20
+	}
+});
 
  export default class App  extends Component {
  	render() {
